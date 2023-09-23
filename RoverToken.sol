@@ -13,6 +13,10 @@ contract RoverToken is ERC20, Ownable, Pausable {
     // Tokenomics parameters
     uint256 private constant totalSupplyCap = 1e8 * 10**18; // 100 million ROVE tokens cap
 
+    // Define events
+    event Minted(address indexed account, uint256 amount);
+    event Burned(address indexed account, uint256 amount);
+
     /**
      * @dev Constructor to initialize the ROVE token.
      */
@@ -26,6 +30,7 @@ contract RoverToken is ERC20, Ownable, Pausable {
      */
     function pause() external onlyOwner {
         _pause();
+        emit Paused(msg.sender);
     }
 
     /**
@@ -33,6 +38,7 @@ contract RoverToken is ERC20, Ownable, Pausable {
      */
     function unpause() external onlyOwner {
         _unpause();
+        emit Unpaused(msg.sender);
     }
 
     /**
@@ -46,6 +52,7 @@ contract RoverToken is ERC20, Ownable, Pausable {
         require(totalSupply() + amount <= totalSupplyCap, "Exceeds supply cap");
 
         _mint(account, amount);
+        emit Minted(account, amount);
     }
 
     /**
@@ -58,6 +65,7 @@ contract RoverToken is ERC20, Ownable, Pausable {
         require(amount != 0, "Amount must be greater than 0");
 
         _burn(account, amount);
+        emit Burned(account, amount);
     }
 
     /**
